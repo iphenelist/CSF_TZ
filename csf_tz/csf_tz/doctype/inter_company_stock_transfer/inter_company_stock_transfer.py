@@ -8,7 +8,7 @@ from erpnext.stock.get_item_details import get_valuation_rate
 class InterCompanyStockTransfer(Document):
     def before_submit(self,warehouse=None):
         item_list_from = []
-        item_list_to = []
+        # item_list_to = []
 
         for item in self.items_child:
             
@@ -25,15 +25,15 @@ class InterCompanyStockTransfer(Document):
                     "valuation_rate": valuation_rate,
                 })
 
-                item_list_to.append({
-                    "item_name": item.item_name,
-                    "item_code": item.item_code,
-                    "uom": item.uom,
-                    "qty": item.qty,
-                    "t_warehouse": self.default_to_warehouse,
-                    "valuation_rate": valuation_rate,
-                    "cost_center": ""
-                })
+                # item_list_to.append({
+                #     "item_name": item.item_name,
+                #     "item_code": item.item_code,
+                #     "uom": item.uom,
+                #     "qty": item.qty,
+                #     "t_warehouse": self.default_to_warehouse,
+                #     "valuation_rate": valuation_rate,
+                #     "cost_center": ""
+                # })
 
         entry_from = frappe.get_doc({
             "doctype": "Stock Entry",
@@ -51,7 +51,7 @@ class InterCompanyStockTransfer(Document):
             "company": self.to_company,
             "stock_entry_type": "To Company",
             "to_warehouse": self.default_to_warehouse,
-            "items": item_list_to,
+            "items": item_list_from,
             "transfer_goods_between_company": self.name
         })
         entry_to.insert(ignore_permissions=True)
